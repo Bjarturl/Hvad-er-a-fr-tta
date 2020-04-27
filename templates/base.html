@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% load static %}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Hvað er að frétta?</title>
+        <link rel="stylesheet" href="{% static  'css/main.css' %}">
+        <link rel="shortcut icon" type="image/jpg" href="{% static 'images/newspaper.jpg' %}" />
+
+</head>
+
+<body>
+    <div>
+        <nav class="navbar ">
+            <ul class="nav-links">
+                <li class="nav-link"><a href="/"><img src="{% static 'images/newspaper.jpg' %}" class="icon-image"></a></li>
+                <li class="nav-link"><a href="/">Fréttir</a></li>
+                <li class="nav-link"><a href="/hvaderadfretta">Hvað er að frétta?</a></li>
+                <li class="nav-link"><a href="/helstifrettum">Helst í fréttum</a></li>
+                <li class="nav-link"><a href="/sogur">Sögur</a></li>
+            </ul>
+        </nav>
+    {% block content %}
+
+    {% endblock %}
+</div>
+</body>
+
+
+</html>

@@ -1,0 +1,120 @@
+{% extends 'base.html' %} 
+{% block content %}
+{% load static %}
+<div class="isl-cont">
+    <h1>Sögur</h1>
+    <div style="width: 50%; display: flex; justify-self: center; align-self: center;font-size: 1.2em">
+        <p>Hér er hægt að velja sögu úr safni Íslendingasagna til að fá alveg nýja sögu með svipaðan stíl, eða setja inn þinn eigin texta (því lengri því betra). Til að velja Íslendingasögu þarf textareitur að vera tómur.
+            <br>ATH: Of lág nákvæmni getur gefið bull en of há gefur útkomu nær upprunalegu sögunni. Þetta getur verið breytilegt eftir sögum.
+        </p>
+    </div>
+    <h3 style="margin-left: 50px; text-decoration: underline;">Síur</h3>
+    <div id="isl-filters">
+        <div class="slidecontainer">
+            <label for="acc-range">Nákvæmni: <a id="acc-val"></a></label><br>
+            <input type="range" min="1" max="25" value="15" class="slider" id="acc-range">
+        </div>
+        <div class="chapters-slider">
+            <label for="chapter-range">Fjöldi kafla: <a id="chapter-val"></a></label><br>
+            <input type="range" min="1" max="15" value="3" class="slider" id="chapter-range">
+        </div><br>
+
+    </div>
+    <div style="margin-left: 50px;">
+        <div>
+            <label for="stories">Veldu sögu:</label><br>
+            <select id="stories">
+                {% for s in stories %}
+                <option value="{{ s }}">{{ s }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="custom-story">eða gerðu þína eigin</label><br>
+            <textarea id="custom-story" rows="8" cols="50" ></textarea>
+        </div>
+        
+    </div>
+    <div >
+        <button style="width: 150px; height: 60px;margin: 10px;margin-left: 50px;" class="button" onclick="fetchNewStory('{{ csrf_token }}')">Gera nýja sögu</button>
+    </div>
+
+
+</div>
+    <div id="card" style="margin-bottom: 50px;">
+    <div id="container">
+        <h2 id="story-title"></h2>
+        <div class="loader"></div><div class="loadercont"></div>
+        <div class="story"></div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script>
+    $(document).ready(function() {
+        fetchNewStory();
+    });
+
+    function updateSlider(slider, output) {
+        output.innerHTML = slider.value; 
+        slider.oninput = function() {
+            output.innerHTML = this.value;
+        }
+    }
+
+
+    function loading(load) {
+        if(load) {
+            document.getElementsByClassName("story")[0].innerHTML = "";
+            document.getElementsByClassName("loader")[0].style.display = "block";
+        } else {
+            document.getElementsByClassName("loader")[0].style.display = "none";
+        }
+    }
+
+    function parseFilters() {
+        var accuracy = document.getElementById("acc-range")
+        var accuracy_val = document.getElementById("acc-val")
+        updateSlider(accuracy, accuracy_val)
+        var chapters = document.getElementById("chapter-range")
+        var chapters_val = document.getElementById("chapter-val")
+        updateSlider(chapters, chapters_val)
+        var custom_story = document.getElementById("custom-story").value;
+        var story_base = document.getElementById("stories").value
+        if (custom_story.length <= 50) {
+            document.getElementById("story-title").innerHTML = story_base + " (Endursögð)"
+
+        } else {
+            document.getElementById("story-title").innerHTML = "Þín eigin saga"
+        }
+        var filters = {
+            "accuracy": accuracy.value,
+            "chapters": chapters.value,
+            "story_base": story_base,
+            "custom_story": custom_story
+        }
+        return filters;
+    }
+
+    function fetchNewStory() {
+        loading(true)
+        var filters = parseFilters();
+        $.ajax({
+                url: "getIslendingasogur",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    filters: filters,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function (response) {
+                    loading(false)
+                    
+                    document.getElementsByClassName("story")[0].innerHTML = response["story"]
+                }
+            });
+    }
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html' %} 
+{% block content %}
+{% load static %}
+<div class="bestof-cont">
+<h1>Í fréttum er þetta helst</h1>
+    <div class="imgs">
+        {% for i in imgs %}
+            <div class="imgbox"><img src="{{ i }}" class="bestof-img"></div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

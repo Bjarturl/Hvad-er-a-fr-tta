@@ -1,0 +1,161 @@
+{% extends 'base.html' %} 
+{% block content %}
+
+<div id="filters">
+    <div id="checkboxes">
+        <h3>Síur</h3>
+        <input type="checkbox" id="skipArticle" name="skipArticle">Sleppa grein</input><br><br>
+        <div id="media">
+            <div id="medialabels">
+                <label for="source"><b>Miðlar</b></label>
+                <span>
+                    <br><input type="checkbox" class="source" name="source" value="Vísir" checked>Vísir</input>
+                </span>
+                <span>
+                    <br><input type="checkbox" class="source" name="source" value="Mbl" checked>Mbl</input>
+                </span>
+
+            </div>
+        </div>
+    </div>
+    
+    <div id="keywords-container">
+        <div id="keywords">
+            <datalist id="suggestions">
+                <option value="Covid">
+                <option value="Trump">
+                <option value="Samkomubann">
+                <option value="Kórónuv">
+                <option value="Eurovision">
+            </datalist>
+            <h3>Efnisorð</h3>
+            <label for="keyword"> Aðeins nota fréttir sem innihalda eitthvað af eftirfarandi orðum: </label><br>
+            {% for i in "12345" %}
+                {{forloop.counter}}. <input class="keyword" name="keyword" type="text" list="suggestions" autocomplete="off"><br>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<div class="fetchArticle">
+    <button class="button" onclick="fetchNewArticle('{{ csrf_token }}')">Gera nýja frétt</button>
+</div>
+<div id="infobox">
+    <p class="dbFailed"></p>
+    <p class="timeElapsed"></p>
+</div>
+
+<div id="card">
+    <div id="container">
+        <h1 class="title"></h1>
+        <div class="loader"></div><div class="loadercont"></div>
+        <img class="image" src=""> </img>
+        <small class="caption"></small>
+        <p class="article"></p>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script>
+    $(document).ready(function() {
+        parseFilters(); //Test
+        fetchNewArticle();
+    });
+
+
+
+
+    function parseFilters() {
+        var skip = document.getElementById("skipArticle").checked;
+        var keywords = document.getElementsByClassName("keyword");
+        var keyword_filters = [""]
+        for (var i in keywords) {
+            var word = keywords[i].value
+            if(word != undefined && word != "") {
+                keyword_filters.push(word.split(" ")[0]);
+            }
+        }
+
+        var media = document.getElementsByClassName("source");
+        var media_filters = {}
+        for(var i in media) {
+            if(media[i].checked != undefined) {
+                media_filters[media[i].value] = media[i].checked
+            }   
+        }
+        var filters = {
+            "keywords": keyword_filters,
+            "skip": skip,
+            "media": media_filters
+        }
+        return filters;
+    }
+
+    function loading(load) {
+        if(load) {
+            document.getElementsByClassName("image")[0].style.visibility = "hidden";
+            document.getElementsByClassName("loader")[0].style.display = "block";
+            document.getElementsByClassName("loadercont")[0].innerHTML = "Sæki frétt...";
+            document.getElementsByClassName("image")[0].src = "";
+            document.getElementsByClassName("caption")[0].innerHTML = "";
+            document.getElementsByClassName("title")[0].innerHTML = "";
+            document.getElementsByClassName("timeElapsed")[0].innerHTML = "";
+            document.getElementsByClassName("dbFailed")[0].innerHTML = "";
+        } else {
+            document.getElementsByClassName("image")[0].style.visibility = "visible";
+            document.getElementsByClassName("loader")[0].style.display = "none";
+            document.getElementsByClassName("loadercont")[0].innerHTML = "";
+        }
+    }
+
+    function fetchNewArticle() {
+        loading(true);
+
+        var filters = parseFilters();
+        $.ajax({
+                url: "newArticle",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    skip: filters['skip'],
+                    keywords: filters['keywords'],
+                    media: filters['media'],
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function (response) {
+                    loading(false);
+                    if(response.fromdb == 0) {
+                        document.getElementsByClassName("dbFailed")[0].innerHTML = "Ekki tókst að gera frétt út frá þessum skilyrðum.<br>";
+                        document.getElementsByClassName("article")[0].innerHTML = "";
+
+                    } else {
+                        document.getElementsByClassName("dbFailed")[0].style.visibility = "hidden"
+                    }
+                    if (response.title != "" && response.caption != "") {
+                        if(response.fromdb == 0) {
+                            document.getElementsByClassName("dbFailed")[0].innerHTML += "Notaði öll gögn í staðinn.<br>";
+                            document.getElementsByClassName("dbFailed")[0].style.visibility = "visible"
+                        }
+                        document.getElementsByClassName("image")[0].src = response.image;
+                        document.getElementsByClassName("caption")[0].innerHTML = response.caption;
+                        document.getElementsByClassName("title")[0].innerHTML = response.title;
+                    
+                        var articleString = "";
+                        for(a in response.article) {
+                            if(response.article[a] != "") {
+                                articleString += response.article[a] + ". "
+                            }
+                            if((a+1) % 3 == 0) {
+                                articleString += "<br><br>"
+                            }
+                        }
+                        document.getElementsByClassName("article")[0].innerHTML = articleString;
+                        document.getElementsByClassName("timeElapsed")[0].innerHTML = "Það tók " + response.time + " sekúndur að gera þessa frétt.<br>";
+                    }
+                }
+            });
+    }
+
+
+</script>
+
+{% endblock %}

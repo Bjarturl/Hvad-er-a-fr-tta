@@ -1,0 +1,323 @@
+#container {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.article {
+
+}
+
+.caption {
+    display: flex;
+    align-self: flex-start;
+    margin-left: 5%;
+}
+
+small {
+    font-size: 18px;
+}
+
+.title {
+    display: flex;
+    text-align: center;
+    margin-right: 10px;
+    word-wrap: break-word;
+    width: 800px;
+    align-self: flex-start;
+    margin-left: 5%;
+}
+
+#card {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    font-size: 20px;
+    width: 70%;
+}
+
+.image {
+    width: 800px;
+    height: 500px;
+    display: flex;
+    align-self: flex-start;
+    margin-left: 5%;
+}
+
+.button {
+    background-color: #4CAF50; 
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    width: 170px;
+}
+
+#filters {
+    display: flex;
+    width: 100%;
+    margin-left: 5px;
+}
+
+#filters h3 {
+    text-decoration: underline;
+
+}
+
+#keywords-container {
+    border-left: 1px solid black;
+    margin-left: 10px;
+}
+
+#keywords {
+    margin-left: 10px;
+}
+
+#media {
+    border-top: 2px solid black;
+    margin-top: 5px;
+}
+#medialabels {
+    margin-top: 5px;
+}
+
+#checkboxes {
+    width: 250px;
+}
+
+.fetchArticle {
+    display: grid;
+    grid-template-rows: 0.7fr 0.3fr;
+    grid-template-columns: 1fr;
+    margin-left: 10px;
+}
+
+.fetchArticle button {
+    grid-row: 2;
+}
+
+.dbFailed {
+    margin-left: 5px;
+    background-color: red;
+    color: white;
+    font-size: 18px;
+    height: 30%;
+    width: 300px;
+}
+
+.timeElapsed {
+    margin-left: 5px;
+    background-color: blue;
+    color: white;
+    font-size: 18px;
+    height: 30%;
+    width: 300px;
+}
+
+#infobox {
+    margin-left: 5px;
+}
+
+body {
+    margin: 0;
+    font-size: 1.1em;
+}
+
+
+
+.navbar {
+    background-color: lightgreen;
+    margin-top: -15px;
+    padding-bottom: 5px;
+    display: flex;
+    border-bottom: 3px solid black;
+}
+
+.nav-links img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+
+}
+
+a:visited {
+    color: black;
+}
+
+a:link {
+    color: black;
+    text-decoration: none;
+}
+
+ul.nav-links li:hover {
+    opacity: 0.5;
+}
+
+ul.nav-links li {
+    display: inline-block;
+    padding-right: 40px;
+    font-size: 2em;
+}
+
+.nav-links {
+    padding-left: 0;
+}
+
+
+.about {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    font-size: 1.3em;
+}
+
+.about h1 {
+    text-align: center;
+}
+
+.about-container {
+    width: 70%;
+}
+
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #4CAF50; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.imgs {
+    display: grid;
+    grid-template-columns: repeat(3, 0.33fr);
+}
+
+.imgs img {
+    height: 100%;
+    width: 100%;
+}
+
+.imgbox {
+    border: 5px solid black;
+    margin: 10px;
+    height: 850px;
+    width: 500px;
+}
+
+.bestof-cont {
+    display: grid;
+}
+
+.bestof-cont h1 {
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 600px) {
+    h1 {
+        font-size: 26px;
+    }
+    .about-container {
+        width: 100%;
+    }
+    .navbar {
+        width: 700px;
+        font-size: 0.7em;
+        padding: 1px;
+    }
+    #card {
+        width: 100%;
+    }
+    .image {
+        width: 300px;
+        height: 300px;
+    }
+
+    .imgs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+    .imgbox {
+        height: 650px;
+        width: 500px;
+    }
+
+    .title {
+        display: flex;
+        text-align: center;
+        margin-right: 10px;
+        word-wrap: break-word;
+        align-self: flex-start;
+        width: 90%;
+        margin-left: 0%;
+    }
+}
+
+.slidecontainer {
+    width: 100%; /* Width of the outside container */
+  }
+
+/* The slider itself */
+.slider {
+-webkit-appearance: none;  /* Override default CSS styles */
+appearance: none;
+width: 80%; /* Full-width */
+height: 25px; /* Specified height */
+background: #d3d3d3; /* Grey background */
+outline: none; /* Remove outline */
+opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+transition: opacity .2s;
+}
+
+.slider:hover {
+opacity: 1; /* Fully shown on mouse-over */
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    background: #4CAF50; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+width: 25px; /* Set a specific slider handle width */
+height: 25px; /* Slider handle height */
+background: #4CAF50; /* Green background */
+cursor: pointer; /* Cursor on hover */
+}
+
+#isl-filters {
+    display: grid;
+    grid-template-columns: 150px 150px;
+    margin-left: 50px;
+}
+
+.isl-cont {
+    display: grid;
+}
+
+.isl-cont h1 {
+    display: flex;
+    justify-content: center;
+}
+
+#stories {
+    width: 250px;
+}
